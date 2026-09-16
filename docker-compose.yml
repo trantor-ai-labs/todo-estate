@@ -37,6 +37,33 @@ services:
       timeout: 2s
       retries: 15
 
+  # ── the thing a conversion produces ──────────────────────────────────────
+  # `web` bakes its app in at image-build time, which is right for the fixed "before" side and
+  # useless for an "after" that does not exist yet. A conversion writes a built app to a directory
+  # on the host; this serves whatever is there, at whatever path the grading spec expects for that
+  # framework.
+  #
+  # Parameterised rather than duplicated because the suites are framework-agnostic by design — the
+  # only permitted conformance change is CYPRESS_app, so the estate has to be able to honour that
+  # for a framework nobody has converted to yet.
+  #
+  #   CONVERTED_DIST  host path to the built app        e.g. ../todo-svelte/dist
+  #   CONVERTED_APP   path the spec serves it at        e.g. svelte/dist
+  web-converted:
+    profiles: ["converted"]
+    image: nginx:alpine
+    depends_on:
+      backend: { condition: service_healthy }
+    ports: ["8082:80"]
+    volumes:
+      - ${CONVERTED_DIST:-../todo-angular/dist/browser}:/usr/share/nginx/html/examples/${CONVERTED_APP:-angular/dist/browser}:ro
+      - ./nginx-converted.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/examples/${CONVERTED_APP:-angular/dist/browser}/ >/dev/null || exit 1"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
   # ── the measurement ──────────────────────────────────────────────────────
   # The grading suites live HERE, in the estate, not in the repo being converted. They moved out of
   # `todo-angular` on 2026-09-18 because the factory converts that repo in a git worktree, which

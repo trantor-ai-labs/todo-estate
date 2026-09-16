@@ -38,6 +38,15 @@ services:
       retries: 15
 
   # ── the measurement ──────────────────────────────────────────────────────
+  # The grading suites live HERE, in the estate, not in the repo being converted. They moved out of
+  # `todo-angular` on 2026-09-18 because the factory converts that repo in a git worktree, which
+  # handed the model the very tests it is graded against. The hold-out is now a fact about where the
+  # files are rather than an instruction a prompt can forget — and with a green grade as the
+  # Definition of Done, the cheapest path to passing would otherwise be reading the answers.
+  #
+  # They also belong here on their own merits: a suite grades the estate. It is not a property of
+  # the thing being graded, and a Svelte app must be graded by the same unedited suite.
+  #
   # cypress/included ships the browser and the binary. `docker compose run conformance`
   # is the whole setup step on a machine that has never seen this project.
   conformance:
@@ -47,7 +56,7 @@ services:
       web: { condition: service_healthy }
     working_dir: /e2e
     volumes:
-      - ../todo-angular/conformance:/e2e
+      - ./conformance:/e2e
     environment:
       # Same-origin: the app asks `web` for /api, nginx proxies to `backend`. Identical to what a
       # person's browser does against localhost:8080.

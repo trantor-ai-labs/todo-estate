@@ -1,0 +1,72 @@
+# The Angular-to-Svelte migration estate.
+#
+# Everything here runs in a container, including the tests. Nothing is installed on the machine
+# running it — no JDK, no Node, no Cypress binary. That is not tidiness: this repository's own
+# engine exists because a build once failed for a reason belonging to the laptop (Gradle 4.9
+# meeting JDK 26) and the false finding anchored a twelve-unit estimate. A migration case study
+# that cannot be reproduced on someone else's machine proves nothing to them.
+
+name: todo-estate
+
+services:
+  # ── the fixed point ──────────────────────────────────────────────────────
+  # Does not change during the migration. Not a line.
+  backend:
+    build: ../todo-backend-java
+    environment:
+      PORT: "8081"
+    ports: ["8081:8081"]          # published so the API can be poked by hand
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8081/ || exit 1"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+  # ── the thing being migrated ─────────────────────────────────────────────
+  # Swap this for todo-svelte and every assertion below must still pass, unedited.
+  web:
+    build: ../todo-angular
+    depends_on:
+      backend: { condition: service_healthy }
+    ports: ["8080:80"]
+    healthcheck:
+      # 127.0.0.1, not localhost: busybox wget tries ::1 first and nginx listens on IPv4
+      # only, so the probe was refused while the server was serving 200s to everyone else.
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/examples/angular/dist/browser/ >/dev/null || exit 1"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+  # ── the measurement ──────────────────────────────────────────────────────
+  # cypress/included ships the browser and the binary. `docker compose run conformance`
+  # is the whole setup step on a machine that has never seen this project.
+  conformance:
+    profiles: ["test"]
+    image: cypress/included:15.4.0
+    depends_on:
+      web: { condition: service_healthy }
+    working_dir: /e2e
+    volumes:
+      - ../todo-angular/conformance:/e2e
+    environment:
+      # Same-origin: the app asks `web` for /api, nginx proxies to `backend`. Identical to what a
+      # person's browser does against localhost:8080.
+      # TodoMVC's spec appends its own framework folder to baseUrl, so baseUrl is the /examples/
+      # root exactly as upstream has it. Putting the full app path here double-appends it.
+      CYPRESS_baseUrl: http://web/examples/
+      CYPRESS_app: angular/dist/browser
+      CYPRESS_api: http://web/api
+    entrypoint: ["sh", "-c"]
+    command: >
+      "./fetch-upstream-spec.sh && cypress run --env framework=angular"
+
+  # ── the backend's own contract, headless ─────────────────────────────────
+  backend-contract:
+    profiles: ["test"]
+    image: node:22-alpine
+    depends_on:
+      backend: { condition: service_healthy }
+    working_dir: /w
+    volumes:
+      - ../todo-backend-java/conformance:/w
+    command: ["node", "spec.mjs", "http://backend:8081"]

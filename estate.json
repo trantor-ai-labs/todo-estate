@@ -56,7 +56,9 @@
     "baseUrlEnv": "CYPRESS_baseUrl",
     "baseUrl": "http://web-converted/examples/",
     "appEnv": "CYPRESS_app",
-    "proven": "2026-09-17: the three server-persistence checks ran green against web-converted with the app served at examples/svelte/dist, pointed there by CYPRESS_baseUrl and CYPRESS_app alone and with the suites unedited. The build served was the ANGULAR one \u2014 so this proves the plumbing and the \"only CYPRESS_app changes\" claim, not that Svelte works. That is what a conversion has yet to earn."
+    "proven": "2026-09-17: the three server-persistence checks ran green against web-converted with the app served at examples/svelte/dist, pointed there by CYPRESS_baseUrl and CYPRESS_app alone and with the suites unedited. The build served was the ANGULAR one \u2014 so this proves the plumbing and the \"only CYPRESS_app changes\" claim, not that Svelte works. That is what a conversion has yet to earn.",
+    "startTimeoutMs": 60000,
+    "startTimeoutWhy": "How long the converted app may take to answer before the run records that it never came up. Declared here because the estate knows its own boot time and the factory does not \u2014 the same rule `baseUrlEnv` already follows. It exists to keep one misattribution from replacing another: without a probe, an app that builds and never serves reads as a behavioural regression blamed on the conversion; with too short a probe, a merely slow start reads as one that never happened. 60s is generous for a static server behind compose, and an estate that boots slower says so here."
   },
   "measurement": {
     "profile": "test",

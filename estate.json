@@ -29,9 +29,11 @@
     },
     {
       "suite": "server-persistence",
-      "path": "conformance/e2e/persistence.cy.js",
+      "path": "conformance",
       "pin": "local",
-      "contradicts": "modernization/conversion/todo-svelte.md"
+      "contradicts": "modernization/conversion/todo-svelte.md",
+      "spec": "e2e/persistence.cy.js",
+      "note": "Declared as the suite ROOT, not as the spec file. It is a Cypress project rooted here; `spec` names the file within it. Declaring the file made the hold-out manifest end in `persistence.cy.js`, so a conversion copy carrying `conformance/` under any other filename read CLEAN \u2014 a hole in the one control that protects the whole eval, opened by the declaration rather than by the code that reads it."
     },
     {
       "suite": "todo-backend-contract",

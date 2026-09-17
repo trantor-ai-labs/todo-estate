@@ -1,0 +1,50 @@
+{
+  "estate": "todo-estate",
+  "shape": "one application, one fixed service, one grading estate",
+  "why": "The Angular-to-Svelte migration case study. One variable moves: the application is converted, the backend is not, and the grading suites live here rather than in the thing they grade.",
+  "repos": [
+    {
+      "name": "todo-estate",
+      "role": "the estate descriptor, its compose and the grading suites",
+      "selected": true
+    },
+    {
+      "name": "todo-angular",
+      "role": "the application being converted",
+      "selected": true
+    },
+    {
+      "name": "todo-backend-java",
+      "role": "the fixed service, which a conversion must not change",
+      "selected": true
+    }
+  ],
+  "gradingSuites": [
+    {
+      "suite": "todomvc-browser",
+      "path": "conformance/todomvc/cypress/e2e",
+      "pin": "ff43b02e59dfa604386bb382034b2cd07c2bcd8a",
+      "fetchedBy": "conformance/fetch-upstream-spec.sh",
+      "contradicts": "modernization/conversion/todo-svelte.md"
+    },
+    {
+      "suite": "server-persistence",
+      "path": "conformance/e2e/persistence.cy.js",
+      "pin": "local",
+      "contradicts": "modernization/conversion/todo-svelte.md"
+    },
+    {
+      "suite": "todo-backend-contract",
+      "path": "../todo-backend-java/conformance/spec.mjs",
+      "pin": "local",
+      "contradicts": null
+    }
+  ],
+  "fixedComponent": "todo-backend-java",
+  "convertedApp": {
+    "servedBy": "web-converted",
+    "distEnv": "CONVERTED_DIST",
+    "pathEnv": "CONVERTED_APP",
+    "expectedPath": "svelte/dist"
+  }
+}

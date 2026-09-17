@@ -2,21 +2,26 @@
   "estate": "todo-estate",
   "shape": "one application, one fixed service, one grading estate",
   "why": "The Angular-to-Svelte migration case study. One variable moves: the application is converted, the backend is not, and the grading suites live here rather than in the thing they grade.",
+  "owner": "trantor-ai-labs",
+  "ownerNote": "Where a member is obtained from. Each repo resolves to `<owner>/<name>` unless it carries its own `source`. Added 2026-09-17: the descriptor named its members and never said where they live, so `repo.parseTarget` had no target and `layOutEstate` could not be implemented at all. Declared here rather than derived from the run, because an estate that only resolves when the run happens to belong to the same owner is an estate that works by coincidence.",
   "repos": [
     {
       "name": "todo-estate",
       "role": "the estate descriptor, its compose and the grading suites",
-      "selected": true
+      "selected": true,
+      "source": "trantor-ai-labs/todo-estate"
     },
     {
       "name": "todo-angular",
       "role": "the application being converted",
-      "selected": true
+      "selected": true,
+      "source": "trantor-ai-labs/todo-angular"
     },
     {
       "name": "todo-backend-java",
       "role": "the fixed service, which a conversion must not change",
-      "selected": true
+      "selected": true,
+      "source": "trantor-ai-labs/todo-backend-java"
     }
   ],
   "gradingSuites": [
@@ -51,12 +56,12 @@
     "baseUrlEnv": "CYPRESS_baseUrl",
     "baseUrl": "http://web-converted/examples/",
     "appEnv": "CYPRESS_app",
-    "proven": "2026-09-18: the three server-persistence checks ran green against web-converted with the app served at examples/svelte/dist, pointed there by CYPRESS_baseUrl and CYPRESS_app alone and with the suites unedited. The build served was the ANGULAR one \u2014 so this proves the plumbing and the \"only CYPRESS_app changes\" claim, not that Svelte works. That is what a conversion has yet to earn."
+    "proven": "2026-09-17: the three server-persistence checks ran green against web-converted with the app served at examples/svelte/dist, pointed there by CYPRESS_baseUrl and CYPRESS_app alone and with the suites unedited. The build served was the ANGULAR one \u2014 so this proves the plumbing and the \"only CYPRESS_app changes\" claim, not that Svelte works. That is what a conversion has yet to earn."
   },
   "measurement": {
     "profile": "test",
     "reportsDir": "reports",
     "reportsEnv": "REPORTS_DIR",
-    "why": "The suites print for a person and write JUnit for a factory. Neither did until 2026-09-18: Cypress had no reporter and the contract suite printed only, so a run measuring a baseline collected zero cases and refused \u2014 honestly, and forever. `profile` is declared because a suite-to-service map would be wrong by construction here: three suites, two services."
+    "why": "The suites print for a person and write JUnit for a factory. Neither did until 2026-09-17: Cypress had no reporter and the contract suite printed only, so a run measuring a baseline collected zero cases and refused \u2014 honestly, and forever. `profile` is declared because a suite-to-service map would be wrong by construction here: three suites, two services."
   }
 }

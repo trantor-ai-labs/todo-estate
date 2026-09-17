@@ -45,7 +45,11 @@
     "servedBy": "web-converted",
     "distEnv": "CONVERTED_DIST",
     "pathEnv": "CONVERTED_APP",
-    "expectedPath": "svelte/dist"
+    "expectedPath": "svelte/dist",
+    "baseUrlEnv": "CYPRESS_baseUrl",
+    "baseUrl": "http://web-converted/examples/",
+    "appEnv": "CYPRESS_app",
+    "proven": "2026-09-18: the three server-persistence checks ran green against web-converted with the app served at examples/svelte/dist, pointed there by CYPRESS_baseUrl and CYPRESS_app alone and with the suites unedited. The build served was the ANGULAR one \u2014 so this proves the plumbing and the \"only CYPRESS_app changes\" claim, not that Svelte works. That is what a conversion has yet to earn."
   },
   "measurement": {
     "profile": "test",

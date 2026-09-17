@@ -30,7 +30,11 @@
       "path": "conformance/todomvc/cypress/e2e",
       "pin": "ff43b02e59dfa604386bb382034b2cd07c2bcd8a",
       "fetchedBy": "conformance/fetch-upstream-spec.sh",
-      "contradicts": "modernization/conversion/todo-svelte.md"
+      "contradicts": "modernization/conversion/todo-svelte.md",
+      "reportedAs": {
+        "by": "spec",
+        "matching": "todomvc/cypress/e2e/*"
+      }
     },
     {
       "suite": "server-persistence",
@@ -38,13 +42,21 @@
       "pin": "local",
       "contradicts": "modernization/conversion/todo-svelte.md",
       "spec": "e2e/persistence.cy.js",
-      "note": "Declared as the suite ROOT, not as the spec file. It is a Cypress project rooted here; `spec` names the file within it. Declaring the file made the hold-out manifest end in `persistence.cy.js`, so a conversion copy carrying `conformance/` under any other filename read CLEAN \u2014 a hole in the one control that protects the whole eval, opened by the declaration rather than by the code that reads it."
+      "note": "Declared as the suite ROOT, not as the spec file. It is a Cypress project rooted here; `spec` names the file within it. Declaring the file made the hold-out manifest end in `persistence.cy.js`, so a conversion copy carrying `conformance/` under any other filename read CLEAN \u2014 a hole in the one control that protects the whole eval, opened by the declaration rather than by the code that reads it.",
+      "reportedAs": {
+        "by": "spec",
+        "matching": "e2e/persistence.cy.js"
+      }
     },
     {
       "suite": "todo-backend-contract",
       "path": "../todo-backend-java/conformance/spec.mjs",
       "pin": "local",
-      "contradicts": null
+      "contradicts": null,
+      "reportedAs": {
+        "by": "name",
+        "matching": "todo-backend-contract"
+      }
     }
   ],
   "fixedComponent": "todo-backend-java",
@@ -63,5 +75,6 @@
     "reportsDir": "reports",
     "reportsEnv": "REPORTS_DIR",
     "why": "The suites print for a person and write JUnit for a factory. Neither did until 2026-09-17: Cypress had no reporter and the contract suite printed only, so a run measuring a baseline collected zero cases and refused \u2014 honestly, and forever. `profile` is declared because a suite-to-service map would be wrong by construction here: three suites, two services."
-  }
+  },
+  "gradingSuitesWhy": "Each suite declares how it is recognised in what its OWN reports say, because nothing else relates the two. Measured from a real baseline run on 2026-09-17, not assumed: Cypress sets `classname` to the concatenated test title and names the spec only in the Root Suite's `file` attribute, while the contract suite names itself. So `by` is declared rather than inferred \u2014 two reporters, two answers \u2014 from a closed set: `name` (what the report calls the suite), `spec` (the source file the report says it came from), `file` (the report file itself). `matching` is an exact value or one trailing `*`: an answer, not a pattern language a factory would then have to arbitrate. The paths are relative to the Cypress project root, which is this repo's `conformance/` mounted at /e2e \u2014 `todomvc/cypress/e2e/spec.cy.js`, not `conformance/todomvc/...`. All three declare one, including the contract suite that already works: a rule with one user is a rule nobody has tested, and recognition-by-coincidence is what hid this for a month. For the same reason `describe('server persistence')` is NOT renamed to match \u2014 it is ours and renaming is possible, which is not the same as correct; the rename must never be the mechanism."
 }

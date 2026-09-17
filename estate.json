@@ -46,5 +46,11 @@
     "distEnv": "CONVERTED_DIST",
     "pathEnv": "CONVERTED_APP",
     "expectedPath": "svelte/dist"
+  },
+  "measurement": {
+    "profile": "test",
+    "reportsDir": "reports",
+    "reportsEnv": "REPORTS_DIR",
+    "why": "The suites print for a person and write JUnit for a factory. Neither did until 2026-09-18: Cypress had no reporter and the contract suite printed only, so a run measuring a baseline collected zero cases and refused \u2014 honestly, and forever. `profile` is declared because a suite-to-service map would be wrong by construction here: three suites, two services."
   }
 }

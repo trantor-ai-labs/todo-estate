@@ -2,3 +2,4 @@ node_modules/
 conformance/todomvc/
 conformance/cypress/videos/
 conformance/cypress/screenshots/
+reports/

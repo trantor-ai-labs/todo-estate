@@ -84,6 +84,10 @@ services:
     working_dir: /e2e
     volumes:
       - ./conformance:/e2e
+      # Where a graded run collects from. Without it the suites print and nothing machine-readable
+      # survives the container, so a factory measuring a baseline collects zero cases and refuses —
+      # honestly, but forever.
+      - ${REPORTS_DIR:-./reports}:/reports
     environment:
       # Same-origin: the app asks `web` for /api, nginx proxies to `backend`. Identical to what a
       # person's browser does against localhost:8080.
@@ -92,6 +96,7 @@ services:
       CYPRESS_baseUrl: http://web/examples/
       CYPRESS_app: angular/dist/browser
       CYPRESS_api: http://web/api
+      JUNIT_DIR: /reports
     entrypoint: ["sh", "-c"]
     command: >
       "./fetch-upstream-spec.sh && cypress run --env framework=angular"
@@ -103,6 +108,9 @@ services:
     depends_on:
       backend: { condition: service_healthy }
     working_dir: /w
+    environment:
+      JUNIT_OUT: /reports/TEST-todo-backend-contract.xml
     volumes:
       - ../todo-backend-java/conformance:/w
+      - ${REPORTS_DIR:-./reports}:/reports
     command: ["node", "spec.mjs", "http://backend:8081"]
